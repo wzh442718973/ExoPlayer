@@ -23,8 +23,10 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Log;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -271,8 +273,10 @@ public final class SimpleCache implements Cache {
       removeStaleSpans();
     }
     evictor.onStartFile(this, key, position, maxLength);
-    return SimpleCacheSpan.getCacheFile(
+    File file = SimpleCacheSpan.getCacheFile(
         cacheDir, cachedContent.id, position, System.currentTimeMillis());
+    Log.e("wzh", key + " >> " + file);
+    return file;
   }
 
   @Override
@@ -357,6 +361,66 @@ public final class SimpleCache implements Cache {
   public synchronized ContentMetadata getContentMetadata(String key) {
     Assertions.checkState(!released);
     return index.getContentMetadata(key);
+  }
+
+  @Override
+  public void attach(String mainKey, String subKey) {
+    CachedContent main = index.get(mainKey);
+    CachedContent sub = index.get(subKey);
+    if(main != null && sub != null){
+      main.addSubId(sub.id);
+    }
+
+    Log.e("wzh", "attach: " + mainKey + " >> " + Arrays.toString(main.getIds()));
+  }
+
+  private void fullArray(CachedContent cache, List<File> list){
+    if(cache != null) {
+      for (SimpleCacheSpan span : cache.getSpans()) {
+        list.add(span.file);
+      }
+    }
+  }
+
+  @Override
+  public List<File> getCacheFile(String key) {
+    List<File> list = new ArrayList<>();
+    CachedContent cache = index.get(key);
+    fullArray(cache, list);
+    if(cache != null){
+      int[] ids = cache.getIds();
+      for(int i=0; i<ids.length; ++i){
+        fullArray(index.get(index.getKeyForId(ids[i])), list);
+      }
+    }
+    return list;
+  }
+
+  @Override
+  public void removeCache(String key) {
+    CachedContent cache = index.remove(key);
+    if(cache != null){
+      int[] ids = cache.getIds();
+      int idx = 0;
+      while(cache != null){
+        for(SimpleCacheSpan span : cache.getSpans()){
+          notifySpanRemoved(span);
+        }
+        if(idx < ids.length){
+          String subKey = index.getKeyForId(ids[idx++]);
+          if(subKey != null) {
+            cache = index.remove(subKey);
+          }
+        }else{
+          cache = null;
+        }
+      }
+    }
+    try {
+      index.store();
+    } catch (CacheException e) {
+      e.printStackTrace();
+    }
   }
 
   /**

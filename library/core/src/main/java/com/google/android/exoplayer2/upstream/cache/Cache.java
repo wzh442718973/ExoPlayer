@@ -18,6 +18,7 @@ package com.google.android.exoplayer2.upstream.cache;
 import android.support.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 
@@ -260,4 +261,12 @@ public interface Cache {
    * @return A {@link ContentMetadata} for the given key.
    */
   ContentMetadata getContentMetadata(String key);
+
+  //wzh add
+
+    void attach(String mainKey, String subKey);
+
+    List<File> getCacheFile(String key);
+
+  void removeCache(String key);
 }

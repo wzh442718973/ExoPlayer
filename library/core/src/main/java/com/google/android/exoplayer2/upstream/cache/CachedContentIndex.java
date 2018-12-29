@@ -20,6 +20,7 @@ import android.util.SparseBooleanArray;
 import com.google.android.exoplayer2.upstream.cache.Cache.CacheException;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.AtomicFile;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.ReusableBufferedOutputStream;
 import com.google.android.exoplayer2.util.Util;
 import java.io.BufferedInputStream;
@@ -174,6 +175,18 @@ import org.checkerframework.checker.nullness.compatqual.NullableType;
     return keyToContent.get(key);
   }
 
+  public CachedContent remove(String key){
+    CachedContent cache = keyToContent.remove(key);
+    if(cache != null) {
+      changed = true;
+      // Keep an entry in idToKey to stop the id from being reused until the index is next stored.
+      idToKey.put(cache.id, /* value= */ null);
+      // Track that the entry should be removed from idToKey when the index is next stored.
+      removedIds.put(cache.id, /* value= */ true);
+    }
+    return cache;
+  }
+
   /**
    * Returns a Collection of all CachedContent instances in the index. The collection is backed by
    * the {@code keyToContent} map, so changes to the map are reflected in the collection, and
@@ -240,6 +253,7 @@ import org.checkerframework.checker.nullness.compatqual.NullableType;
 
   /** Returns a {@link ContentMetadata} for the given key. */
   public ContentMetadata getContentMetadata(String key) {
+//    Log.e("wzh", "getConntentMetadata: " + key);
     CachedContent cachedContent = get(key);
     return cachedContent != null ? cachedContent.getMetadata() : DefaultContentMetadata.EMPTY;
   }
@@ -350,6 +364,7 @@ import org.checkerframework.checker.nullness.compatqual.NullableType;
   }
 
   private void add(CachedContent cachedContent) {
+    Log.e("wzh", "addCacheContent: " + cachedContent.id + " >> " + cachedContent.key);
     keyToContent.put(cachedContent.key, cachedContent);
     idToKey.put(cachedContent.id, cachedContent.key);
   }

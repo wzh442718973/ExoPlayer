@@ -18,9 +18,15 @@ package com.google.android.exoplayer2.upstream.cache;
 import android.support.annotation.Nullable;
 import com.google.android.exoplayer2.upstream.cache.Cache.CacheException;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.Log;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -42,6 +48,7 @@ import java.util.TreeSet;
   /** Whether the content is locked. */
   private boolean locked;
 
+  private final Set<Integer> mSubIds = new HashSet<>();
   /**
    * Reads an instance from a {@link DataInputStream}.
    *
@@ -53,7 +60,12 @@ import java.util.TreeSet;
       throws IOException {
     int id = input.readInt();
     String key = input.readUTF();
-    CachedContent cachedContent = new CachedContent(id, key);
+    final int count = input.readInt();
+    List<Integer> ids = new ArrayList<>();
+    for(int i=0; i<count; ++i){
+      ids.add(input.readInt());
+    }
+    CachedContent cachedContent = new CachedContent(id, key, ids);
     if (version < VERSION_METADATA_INTRODUCED) {
       long length = input.readLong();
       ContentMetadataMutations mutations = new ContentMetadataMutations();
@@ -78,6 +90,13 @@ import java.util.TreeSet;
     this.cachedSpans = new TreeSet<>();
   }
 
+  protected CachedContent(int id, String key, List<Integer> ids){
+    this(id, key);
+    if(ids != null) {
+      mSubIds.addAll(ids);
+    }
+  }
+
   /**
    * Writes the instance to a {@link DataOutputStream}.
    *
@@ -87,7 +106,24 @@ import java.util.TreeSet;
   public void writeToStream(DataOutputStream output) throws IOException {
     output.writeInt(id);
     output.writeUTF(key);
+    output.writeInt(mSubIds.size());
+    for(Integer id : mSubIds){
+      output.writeInt(id);
+    }
     metadata.writeToStream(output);
+  }
+
+  public void addSubId(int id){
+    mSubIds.add(id);
+  }
+
+  public int[] getIds(){
+    int[] ids = new int[mSubIds.size()];
+    int i = 0;
+    for(Integer id : mSubIds){
+      ids[i++] = id;
+    }
+    return ids;
   }
 
   /** Returns the metadata. */
@@ -118,6 +154,7 @@ import java.util.TreeSet;
 
   /** Adds the given {@link SimpleCacheSpan} which contains a part of the content. */
   public void addSpan(SimpleCacheSpan span) {
+    Log.e("wzh", "addSpan: " + key + " << " + span.key);
     cachedSpans.add(span);
   }
 

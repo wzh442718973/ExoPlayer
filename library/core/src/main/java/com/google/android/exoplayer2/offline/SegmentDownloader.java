@@ -24,8 +24,11 @@ import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheUtil;
 import com.google.android.exoplayer2.upstream.cache.CacheUtil.CachingCounters;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.PriorityTaskManager;
 import com.google.android.exoplayer2.util.Util;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,13 +110,17 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
 
     try {
       List<Segment> segments = initDownload();
+      Log.e("wzh", "InitDownload: Segments="+segments.size());
       Collections.sort(segments);
       byte[] buffer = new byte[BUFFER_SIZE_BYTES];
       CachingCounters cachingCounters = new CachingCounters();
       for (int i = 0; i < segments.size(); i++) {
+        Segment sub = segments.get(i);
+        Log.e("wzh", "download: " + sub.dataSpec.key);
+
         try {
           CacheUtil.cache(
-              segments.get(i).dataSpec,
+              sub.dataSpec,
               cache,
               dataSource,
               buffer,
@@ -125,6 +132,12 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
           downloadedSegments++;
         } finally {
           downloadedBytes += cachingCounters.newlyCachedBytes;
+          //wzh add
+          cache.attach(manifestUri.toString(), sub.dataSpec.uri.toString());
+//          List<File> list = cache.getCacheFile(manifestUri.toString());///测试带嘛要做修改
+//          for(File f : list){
+//            Log.e("wzh", manifestUri + " -> Files:" + f);
+//          }
         }
       }
     } finally {
