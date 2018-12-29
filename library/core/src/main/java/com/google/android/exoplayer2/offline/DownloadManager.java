@@ -349,7 +349,14 @@ public final class DownloadManager {
     logd("Task is added", task);
     return task;
   }
-
+  public Task getDownloadTask(String url){
+    for(Task task : tasks){
+      if(task.action.uri.toString().equals(url)){
+        return task;
+      }
+    }
+    return null;
+  }
   /**
    * Iterates through the task queue and starts any task if all of the following are true:
    *
@@ -601,7 +608,7 @@ public final class DownloadManager {
 
   }
 
-  private static final class Task implements Runnable {
+  public static final class Task implements Runnable {
 
     /**
      * Task states. One of {@link TaskState#STATE_QUEUED}, {@link TaskState#STATE_STARTED}, {@link
@@ -751,7 +758,7 @@ public final class DownloadManager {
       }
     }
 
-    private void start() {
+    public void start() {
       if (changeStateAndNotify(STATE_QUEUED, STATE_STARTED)) {
         thread = new Thread(this);
         thread.start();
@@ -771,7 +778,7 @@ public final class DownloadManager {
       }
     }
 
-    private void stop() {
+    public void stop() {
       if (changeStateAndNotify(STATE_STARTED, STATE_STARTED_STOPPING)) {
         logd("Stopping", this);
         cancelDownload();
@@ -802,6 +809,7 @@ public final class DownloadManager {
       }
       thread.interrupt();
     }
+
 
     // Methods running on download thread.
 
