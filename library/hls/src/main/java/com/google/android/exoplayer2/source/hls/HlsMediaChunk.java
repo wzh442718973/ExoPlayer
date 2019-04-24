@@ -191,7 +191,7 @@ import java.util.concurrent.atomic.AtomicInteger;
   @Override
   public void load() throws IOException, InterruptedException {
     maybeLoadInitData();
-    Log.e("wzh", getClass() + ".loadMedia: " + dataSpec);
+//    Log.e("wzh", getClass() + ".loadMedia: " + dataSpec);
     if (!loadCanceled) {
       if (!hasGapTag) {
         loadMedia();

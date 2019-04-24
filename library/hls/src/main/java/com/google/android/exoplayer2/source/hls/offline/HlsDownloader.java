@@ -129,7 +129,7 @@ public final class HlsDownloader extends SegmentDownloader<HlsPlaylist> {
       HashSet<Uri> seenEncryptionKeyUris) {
     long startTimeUs = mediaPlaylist.startTimeUs + hlsSegment.relativeStartTimeUs;
     if (hlsSegment.fullSegmentEncryptionKeyUri != null) {//wzh 下载器中对于解密KEY的处理
-      Log.e("wzh", "下载用的解密key: " + hlsSegment.fullSegmentEncryptionKeyUri);
+//      Log.e("wzh", "下载用的解密key: " + hlsSegment.fullSegmentEncryptionKeyUri);
       Uri keyUri = UriUtil.resolveToUri(mediaPlaylist.baseUri,
           hlsSegment.fullSegmentEncryptionKeyUri);
       if (seenEncryptionKeyUris.add(keyUri)) {

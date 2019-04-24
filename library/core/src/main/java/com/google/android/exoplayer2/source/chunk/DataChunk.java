@@ -73,11 +73,6 @@ public abstract class DataChunk extends Chunk {
   @Override
   public final void load() throws IOException, InterruptedException {
     try {//wzh 加载数据块
-      Log.e("wzh", getClass() + ".load: " + dataSpec);
-      if("http://vip.av.key".equals(dataSpec.uri.toString())){
-        byte[] key = "dd119bd69feebdec".getBytes();
-//        consume(key.getBytes(), key.length());
-      }
       dataSource.open(dataSpec);
       int limit = 0;
       int bytesRead = 0;

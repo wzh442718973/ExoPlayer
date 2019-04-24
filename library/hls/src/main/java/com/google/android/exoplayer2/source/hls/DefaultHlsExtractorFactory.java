@@ -169,6 +169,18 @@ public final class DefaultHlsExtractorFactory implements HlsExtractorFactory {
     return buildResult(extractorByFileExtension);
   }
 
+  @Override
+  public byte[] getEncryptionKey(String baseUrl, String keyUrl) {
+    OnEncryptionKeyListener listener = mListener;
+    return listener == null ? null : listener.onEncryptionKey(baseUrl, keyUrl);
+  }
+
+  private OnEncryptionKeyListener mListener;
+  @Override
+  public void setEncryptionKeyListener(OnEncryptionKeyListener listener) {
+    mListener = listener;
+  }
+
   private Extractor createExtractorByFileExtension(
       Uri uri,
       Format format,

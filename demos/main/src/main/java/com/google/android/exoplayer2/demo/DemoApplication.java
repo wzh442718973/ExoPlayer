@@ -18,6 +18,7 @@ package com.google.android.exoplayer2.demo;
 import android.app.Application;
 import com.google.android.exoplayer2.offline.DownloadManager;
 import com.google.android.exoplayer2.offline.DownloaderConstructorHelper;
+import com.google.android.exoplayer2.source.hls.HlsExtractorFactory;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
@@ -28,13 +29,14 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 import java.io.File;
 
 /**
  * Placeholder application to facilitate overriding Application methods for debugging and testing.
  */
-public class DemoApplication extends Application {
+public class DemoApplication extends Application implements HlsExtractorFactory.OnEncryptionKeyListener {
 
   private static final String DOWNLOAD_ACTION_FILE = "actions";
   private static final String DOWNLOAD_TRACKER_ACTION_FILE = "tracked_actions";
@@ -52,6 +54,8 @@ public class DemoApplication extends Application {
   public void onCreate() {
     super.onCreate();
     userAgent = Util.getUserAgent(this, "ExoPlayerDemo");
+
+    HlsExtractorFactory.DEFAULT.setEncryptionKeyListener(this);
   }
 
   /** Returns a {@link DataSource.Factory}. */
@@ -127,5 +131,17 @@ public class DemoApplication extends Application {
         /* cacheWriteDataSinkFactory= */ null,
         CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR,
         /* eventListener= */ null);
+  }
+
+  @Override
+  public byte[] onEncryptionKey(String baseUrl, String keyUrl) {
+    Log.e("wzh", "onEncryptionKey: " + baseUrl + " >> " + keyUrl);
+    if("CustomScheme://priv.example.com/key.php?r=52".equals(keyUrl)){
+      return "f48d1f42d274c36a".getBytes();
+    }else if("key.key".equals(keyUrl)){
+      return "dd119bd69feebdec".getBytes();
+    }else{
+      return null;
+    }
   }
 }

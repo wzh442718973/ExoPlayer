@@ -723,7 +723,7 @@ public final class DownloadManager {
             this.action = action;
             this.currentState = STATE_QUEUED;
             this.minRetryCount = minRetryCount;
-            Log.e("wzh", "NewTask: " + id + " >> " + action);
+//            Log.e("wzh", "NewTask: " + id + " >> " + action);
         }
 
         public TaskState getDownloadState() {
@@ -882,7 +882,7 @@ public final class DownloadManager {
             Throwable error = null;
             try {
                 downloader = action.createDownloader(downloadManager.downloaderConstructorHelper);
-                Log.e("wzh", "Task.run: " + action + " >> " + downloader);
+//                Log.e("wzh", "Task.run: " + action + " >> " + downloader);
                 if (action.isRemoveAction) {
                     downloader.remove();
                 } else {

@@ -190,7 +190,7 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
             }
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                Log.e("wzh", getClass().getSimpleName() + ".parse: " + line);
+//                Log.e("wzh", getClass().getSimpleName() + ".parse: " + line);
                 if (line.isEmpty()) {
                     // Do nothing.
                 } else if (line.startsWith(TAG_STREAM_INF)) {
@@ -482,7 +482,7 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
         String line;
         while (iterator.hasNext()) {
             line = iterator.next();
-            Log.e("wzh", "parseMediaPlaylist: " + line);
+//            Log.e("wzh", "parseMediaPlaylist: " + line);
             if (line.startsWith(TAG_PREFIX)) {
                 // We expose all tags through the playlist.
                 tags.add(line);
@@ -598,7 +598,7 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
             } else if (line.equals(TAG_ENDLIST)) {
                 hasEndTag = true;
             } else if (!line.startsWith("#")) {
-                Log.e("wzh", "encryptionKeyUri: " + encryptionKeyUri);
+//                Log.e("wzh", "encryptionKeyUri: " + encryptionKeyUri);
                 String segmentEncryptionIV;
                 if (encryptionKeyUri == null) {
                     segmentEncryptionIV = null;

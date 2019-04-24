@@ -32,7 +32,11 @@ import java.util.Map;
  */
 public interface HlsExtractorFactory {
 
-  HlsExtractorFactory DEFAULT = new DefaultHlsExtractorFactory();
+  interface OnEncryptionKeyListener{
+    byte[] onEncryptionKey(String baseUrl, String keyUrl);
+  }
+
+  public static final HlsExtractorFactory DEFAULT = new DefaultHlsExtractorFactory();
 
   /**
    * Creates an {@link Extractor} for extracting HLS media chunks.
@@ -70,4 +74,6 @@ public interface HlsExtractorFactory {
 
   //wzh add 获得自定义的KEY
   byte[] getEncryptionKey(String baseUrl, String keyUrl);
+
+  void setEncryptionKeyListener(OnEncryptionKeyListener listener);
 }

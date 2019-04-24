@@ -311,20 +311,12 @@ import java.util.List;
 
     // Check if the segment is completely encrypted using the identity key format.
     if (segment.fullSegmentEncryptionKeyUri != null) {//wzh hlzs块中对于解密key的处理
-      Log.e("wzh", "播放用的解密key: " + segment.fullSegmentEncryptionKeyUri + " >> " + encryptionKeyUri);
+//      Log.e("wzh", "播放用的解密key: " + segment.fullSegmentEncryptionKeyUri + " >> " + encryptionKeyUri);
       Uri keyUri = UriUtil.resolveToUri(mediaPlaylist.baseUri, segment.fullSegmentEncryptionKeyUri);
       if (!keyUri.equals(encryptionKeyUri)) {
-//        byte[] Keys = extractorFactory.getEncryptionKey(mediaPlaylist.baseUri, segment.fullSegmentEncryptionKeyUri);
-//        if(Keys != null){
-//          setEncryptionData(keyUri, segment.encryptionIV, Keys);
-//        }
-        if("key.key".equals(segment.fullSegmentEncryptionKeyUri)){
-          byte[] key = "dd119bd69feebdec".getBytes();
-          setEncryptionData(keyUri, segment.encryptionIV, key);
-        }else if("CustomScheme://priv.example.com/key.php?r=52".equals(segment.fullSegmentEncryptionKeyUri)){
-          Log.e("wzh", "播放的是我们自己服务器的");
-          byte[] key = "f48d1f42d274c36a".getBytes();
-          setEncryptionData(keyUri, segment.encryptionIV, key);
+        byte[] Keys = extractorFactory.getEncryptionKey(mediaPlaylist.baseUri, segment.fullSegmentEncryptionKeyUri);
+        if(Keys != null){
+          setEncryptionData(keyUri, segment.encryptionIV, Keys);
         }else {
           // Encryption is specified and the key has changed.
           out.chunk = newEncryptionKeyChunk(keyUri, segment.encryptionIV, selectedVariantIndex,
@@ -390,7 +382,7 @@ import java.util.List;
    */
   public void onChunkLoadCompleted(Chunk chunk) {
     if (chunk instanceof EncryptionKeyChunk) {
-      Log.e("wzh", getClass() + ".onChunkLoadCompleted: 解密块完成得到解密的key");
+//      Log.e("wzh", getClass() + ".onChunkLoadCompleted: 解密块完成得到解密的key");
       EncryptionKeyChunk encryptionKeyChunk = (EncryptionKeyChunk) chunk;
       scratchSpace = encryptionKeyChunk.getDataHolder();
       setEncryptionData(encryptionKeyChunk.dataSpec.uri, encryptionKeyChunk.iv,
@@ -553,7 +545,7 @@ import java.util.List;
     encryptionIvString = iv;
     encryptionIv = ivDataWithPadding;
 
-    Log.e("wzh", "setEncryptionData: keyUri=" + keyUri + "; iv=" + iv + "; " + Arrays.toString(secretKey) + " : " + new String(secretKey));
+//    Log.e("wzh", "setEncryptionData: keyUri=" + keyUri + "; iv=" + iv + "; " + Arrays.toString(secretKey) + " : " + new String(secretKey));
   }
 
   private void clearEncryptionData() {
@@ -632,7 +624,7 @@ import java.util.List;
     @Override
     protected void consume(byte[] data, int limit) throws IOException {
       result = Arrays.copyOf(data, limit);
-      Log.e("wzh", "解密KEY.consume" + Arrays.toString(result) + ", " + new String(result) );
+//      Log.e("wzh", "解密KEY.consume" + Arrays.toString(result) + ", " + new String(result) );
     }
 
     public byte[] getResult() {

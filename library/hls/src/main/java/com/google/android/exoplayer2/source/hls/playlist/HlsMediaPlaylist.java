@@ -134,7 +134,7 @@ public final class HlsMediaPlaylist extends HlsPlaylist {
         long byterangeOffset,
         long byterangeLength,
         boolean hasGapTag) {
-      Log.e("wzh", "Segment: " + url + " << " + fullSegmentEncryptionKeyUri);
+//      Log.e("wzh", "Segment: " + url + " << " + fullSegmentEncryptionKeyUri);
       this.url = url;
       this.initializationSegment = initializationSegment;
       this.title = title;
@@ -262,7 +262,7 @@ public final class HlsMediaPlaylist extends HlsPlaylist {
       @Nullable DrmInitData protectionSchemes,
       List<Segment> segments) {
     super(baseUri, tags, hasIndependentSegments);
-    Log.e("wzh", "HlsMediaPlaylist: " + baseUri + " >> " + segments.size());
+//    Log.e("wzh", "HlsMediaPlaylist: " + baseUri + " >> " + segments.size());
     this.playlistType = playlistType;
     this.startTimeUs = startTimeUs;
     this.hasDiscontinuitySequence = hasDiscontinuitySequence;
