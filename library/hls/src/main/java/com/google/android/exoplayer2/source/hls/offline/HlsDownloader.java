@@ -28,6 +28,7 @@ import com.google.android.exoplayer2.source.hls.playlist.HlsPlaylistParser;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.ParsingLoadable;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.UriUtil;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -127,7 +128,8 @@ public final class HlsDownloader extends SegmentDownloader<HlsPlaylist> {
       HlsMediaPlaylist.Segment hlsSegment,
       HashSet<Uri> seenEncryptionKeyUris) {
     long startTimeUs = mediaPlaylist.startTimeUs + hlsSegment.relativeStartTimeUs;
-    if (hlsSegment.fullSegmentEncryptionKeyUri != null) {
+    if (hlsSegment.fullSegmentEncryptionKeyUri != null) {//wzh 下载器中对于解密KEY的处理
+      Log.e("wzh", "下载用的解密key: " + hlsSegment.fullSegmentEncryptionKeyUri);
       Uri keyUri = UriUtil.resolveToUri(mediaPlaylist.baseUri,
           hlsSegment.fullSegmentEncryptionKeyUri);
       if (seenEncryptionKeyUris.add(keyUri)) {

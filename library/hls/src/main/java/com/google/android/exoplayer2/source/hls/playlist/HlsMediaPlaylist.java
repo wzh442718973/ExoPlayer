@@ -21,6 +21,8 @@ import android.support.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.drm.DrmInitData;
 import com.google.android.exoplayer2.offline.StreamKey;
+import com.google.android.exoplayer2.util.Log;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -105,7 +107,7 @@ public final class HlsMediaPlaylist extends HlsPlaylist {
           /* hasGapTag= */ false);
     }
 
-    /**
+    /** wzh log 将一个m3u8文件通过解析分割为一个个可以播放的视频片段
      * @param url See {@link #url}.
      * @param initializationSegment See {@link #initializationSegment}.
      * @param title See {@link #title}.
@@ -132,6 +134,7 @@ public final class HlsMediaPlaylist extends HlsPlaylist {
         long byterangeOffset,
         long byterangeLength,
         boolean hasGapTag) {
+      Log.e("wzh", "Segment: " + url + " << " + fullSegmentEncryptionKeyUri);
       this.url = url;
       this.initializationSegment = initializationSegment;
       this.title = title;
@@ -259,6 +262,7 @@ public final class HlsMediaPlaylist extends HlsPlaylist {
       @Nullable DrmInitData protectionSchemes,
       List<Segment> segments) {
     super(baseUri, tags, hasIndependentSegments);
+    Log.e("wzh", "HlsMediaPlaylist: " + baseUri + " >> " + segments.size());
     this.playlistType = playlistType;
     this.startTimeUs = startTimeUs;
     this.hasDiscontinuitySequence = hasDiscontinuitySequence;

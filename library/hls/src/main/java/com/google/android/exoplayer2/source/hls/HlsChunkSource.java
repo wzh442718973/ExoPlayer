@@ -36,6 +36,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.TransferListener;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.TimestampAdjuster;
 import com.google.android.exoplayer2.util.UriUtil;
 import com.google.android.exoplayer2.util.Util;
@@ -98,10 +99,10 @@ import java.util.List;
   private IOException fatalError;
   private HlsUrl expectedPlaylistUrl;
   private boolean independentSegments;
-
+  //一个m3u8配置一个解密key，所以相同就直接用
   private Uri encryptionKeyUri;
-  private byte[] encryptionKey;
-  private String encryptionIvString;
+  private byte[] encryptionKey; //解密的key
+  private String encryptionIvString;  //解密的配置参数
   private byte[] encryptionIv;
 
   // Note: The track group in the selection is typically *not* equal to trackGroup. This is due to
@@ -309,16 +310,31 @@ import java.util.List;
     HlsMediaPlaylist.Segment segment = mediaPlaylist.segments.get(chunkIndex);
 
     // Check if the segment is completely encrypted using the identity key format.
-    if (segment.fullSegmentEncryptionKeyUri != null) {
+    if (segment.fullSegmentEncryptionKeyUri != null) {//wzh hlzs块中对于解密key的处理
+      Log.e("wzh", "播放用的解密key: " + segment.fullSegmentEncryptionKeyUri + " >> " + encryptionKeyUri);
       Uri keyUri = UriUtil.resolveToUri(mediaPlaylist.baseUri, segment.fullSegmentEncryptionKeyUri);
       if (!keyUri.equals(encryptionKeyUri)) {
-        // Encryption is specified and the key has changed.
-        out.chunk = newEncryptionKeyChunk(keyUri, segment.encryptionIV, selectedVariantIndex,
-            trackSelection.getSelectionReason(), trackSelection.getSelectionData());
-        return;
-      }
-      if (!Util.areEqual(segment.encryptionIV, encryptionIvString)) {
-        setEncryptionData(keyUri, segment.encryptionIV, encryptionKey);
+//        byte[] Keys = extractorFactory.getEncryptionKey(mediaPlaylist.baseUri, segment.fullSegmentEncryptionKeyUri);
+//        if(Keys != null){
+//          setEncryptionData(keyUri, segment.encryptionIV, Keys);
+//        }
+        if("key.key".equals(segment.fullSegmentEncryptionKeyUri)){
+          byte[] key = "dd119bd69feebdec".getBytes();
+          setEncryptionData(keyUri, segment.encryptionIV, key);
+        }else if("CustomScheme://priv.example.com/key.php?r=52".equals(segment.fullSegmentEncryptionKeyUri)){
+          Log.e("wzh", "播放的是我们自己服务器的");
+          byte[] key = "f48d1f42d274c36a".getBytes();
+          setEncryptionData(keyUri, segment.encryptionIV, key);
+        }else {
+          // Encryption is specified and the key has changed.
+          out.chunk = newEncryptionKeyChunk(keyUri, segment.encryptionIV, selectedVariantIndex,
+                  trackSelection.getSelectionReason(), trackSelection.getSelectionData());
+          return;
+        }
+      }else {
+        if (!Util.areEqual(segment.encryptionIV, encryptionIvString)) {
+          setEncryptionData(keyUri, segment.encryptionIV, encryptionKey);
+        }
       }
     } else {
       clearEncryptionData();
@@ -374,6 +390,7 @@ import java.util.List;
    */
   public void onChunkLoadCompleted(Chunk chunk) {
     if (chunk instanceof EncryptionKeyChunk) {
+      Log.e("wzh", getClass() + ".onChunkLoadCompleted: 解密块完成得到解密的key");
       EncryptionKeyChunk encryptionKeyChunk = (EncryptionKeyChunk) chunk;
       scratchSpace = encryptionKeyChunk.getDataHolder();
       setEncryptionData(encryptionKeyChunk.dataSpec.uri, encryptionKeyChunk.iv,
@@ -535,6 +552,8 @@ import java.util.List;
     encryptionKey = secretKey;
     encryptionIvString = iv;
     encryptionIv = ivDataWithPadding;
+
+    Log.e("wzh", "setEncryptionData: keyUri=" + keyUri + "; iv=" + iv + "; " + Arrays.toString(secretKey) + " : " + new String(secretKey));
   }
 
   private void clearEncryptionData() {
@@ -613,6 +632,7 @@ import java.util.List;
     @Override
     protected void consume(byte[] data, int limit) throws IOException {
       result = Arrays.copyOf(data, limit);
+      Log.e("wzh", "解密KEY.consume" + Arrays.toString(result) + ", " + new String(result) );
     }
 
     public byte[] getResult() {

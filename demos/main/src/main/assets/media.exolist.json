@@ -1,5 +1,42 @@
 [
   {
+    "name": "HLS",
+    "samples": [
+      {
+        "name":"有KEY网络获取",
+        "uri":"http://video.ynianyongheng.com:8091/20181023/KCxcefbD/1000kb/hls/index.m3u8"
+      },
+      {
+        "name":"有KEY需要主动设置",
+        "uri":"https://www.80page.com/777/777_10000/777_10000.m3u8"
+      },
+      {
+        "name": "Apple 4x3 basic stream",
+        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"
+      },
+      {
+        "name": "Apple 16x9 basic stream",
+        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8"
+      },
+      {
+        "name": "Apple master playlist advanced (TS)",
+        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+      },
+      {
+        "name": "Apple master playlist advanced (fMP4)",
+        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8"
+      },
+      {
+        "name": "Apple TS media playlist",
+        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8"
+      },
+      {
+        "name": "Apple AAC media playlist",
+        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8"
+      }
+    ]
+  },
+  {
     "name": "YouTube DASH",
     "samples": [
       {
@@ -336,35 +373,6 @@
         "name": "Super speed (PlayReady)",
         "uri": "https://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism",
         "drm_scheme": "playready"
-      }
-    ]
-  },
-  {
-    "name": "HLS",
-    "samples": [
-      {
-        "name": "Apple 4x3 basic stream",
-        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"
-      },
-      {
-        "name": "Apple 16x9 basic stream",
-        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8"
-      },
-      {
-        "name": "Apple master playlist advanced (TS)",
-        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
-      },
-      {
-        "name": "Apple master playlist advanced (fMP4)",
-        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8"
-      },
-      {
-        "name": "Apple TS media playlist",
-        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8"
-      },
-      {
-        "name": "Apple AAC media playlist",
-        "uri": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8"
       }
     ]
   },

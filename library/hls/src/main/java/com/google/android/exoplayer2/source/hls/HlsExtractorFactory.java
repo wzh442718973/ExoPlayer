@@ -67,4 +67,7 @@ public interface HlsExtractorFactory {
       Map<String, List<String>> responseHeaders,
       ExtractorInput sniffingExtractorInput)
       throws InterruptedException, IOException;
+
+  //wzh add 获得自定义的KEY
+  byte[] getEncryptionKey(String baseUrl, String keyUrl);
 }

@@ -19,6 +19,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 import java.io.IOException;
 import java.util.Arrays;
@@ -71,7 +72,12 @@ public abstract class DataChunk extends Chunk {
 
   @Override
   public final void load() throws IOException, InterruptedException {
-    try {
+    try {//wzh 加载数据块
+      Log.e("wzh", getClass() + ".load: " + dataSpec);
+      if("http://vip.av.key".equals(dataSpec.uri.toString())){
+        byte[] key = "dd119bd69feebdec".getBytes();
+//        consume(key.getBytes(), key.length());
+      }
       dataSource.open(dataSpec);
       int limit = 0;
       int bytesRead = 0;
