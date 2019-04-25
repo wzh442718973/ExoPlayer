@@ -421,6 +421,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
 
   /**
    * Establishes a connection, following redirects to do so where permitted.
+   * wzh log 通过数据块创建一个http连接
    */
   private HttpURLConnection makeConnection(DataSpec dataSpec) throws IOException {
     URL url = new URL(dataSpec.uri.toString());
