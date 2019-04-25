@@ -137,7 +137,7 @@ public class DemoApplication extends Application implements HlsExtractorFactory.
   public byte[] onEncryptionKey(String baseUrl, String keyUrl) {
     Log.e("wzh", "onEncryptionKey: " + baseUrl + " >> " + keyUrl);
     if("CustomScheme://priv.example.com/key.php?r=52".equals(keyUrl)){
-      return "f48d1f42d274c36a".getBytes();
+      return "90323380c0bbf372".getBytes();
     }else if("key.key".equals(keyUrl)){
       return "dd119bd69feebdec".getBytes();
     }else{

@@ -78,6 +78,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 import java.lang.reflect.Constructor;
 import java.net.CookieHandler;
@@ -438,7 +439,7 @@ public class PlayerActivity extends Activity
       playerView.setPlaybackPreparer(this);
       debugViewHelper = new DebugTextViewHelper(player, debugTextView);
       debugViewHelper.start();
-
+      Log.e("wzh", "play:" + uris[0]);
       MediaSource[] mediaSources = new MediaSource[uris.length];
       for (int i = 0; i < uris.length; i++) {
         mediaSources[i] = buildMediaSource(uris[i], extensions[i]);
