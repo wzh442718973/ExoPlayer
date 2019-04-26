@@ -139,7 +139,7 @@ public final class CacheUtil {
         /* enableEOFException= */ false);
   }
 
-  /**
+  /** wzh log 用于缓冲,如果存在加载到缓冲中,如果不存在就下载并缓冲
    * Caches the data defined by {@code dataSpec} while skipping already cached data. Caching stops
    * early if end of input is reached and {@code enableEOFException} is false.
    *
@@ -221,7 +221,7 @@ public final class CacheUtil {
     }
   }
 
-  /**
+  /** wzh 读取并丢弃 dataSpec 指定的所有数据
    * Reads and discards all data specified by the {@code dataSpec}.
    *
    * @param dataSpec Defines the data to be read. {@code absoluteStreamPosition} and {@code length}

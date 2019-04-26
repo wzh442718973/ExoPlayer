@@ -24,6 +24,7 @@ import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheUtil;
 import com.google.android.exoplayer2.upstream.cache.CacheUtil.CachingCounters;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.PriorityTaskManager;
 import com.google.android.exoplayer2.util.Util;
 import java.io.IOException;
@@ -104,7 +105,7 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
   @Override
   public final void download() throws IOException, InterruptedException {
     priorityTaskManager.add(C.PRIORITY_DOWNLOAD);
-
+    Log.e("wzh", "download.循环下载");
     try {
       List<Segment> segments = initDownload();
       Collections.sort(segments);
@@ -197,7 +198,7 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
   protected abstract List<Segment> getSegments(
       DataSource dataSource, M manifest, boolean allowIncompleteList)
       throws InterruptedException, IOException;
-
+  //wzh log 初始化下载,用来加载这个分块信息,并查看哪些信息已经下载OK并加载到内存
   /** Initializes the download, returning a list of {@link Segment}s that need to be downloaded. */
   // Writes to downloadedSegments and downloadedBytes are safe. See the comment on download().
   @SuppressWarnings("NonAtomicVolatileUpdate")
@@ -205,7 +206,7 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
     M manifest = getManifest(dataSource, manifestUri);
     if (!streamKeys.isEmpty()) {
       manifest = manifest.copy(streamKeys);
-    }
+    }//wzh log 初始化下载
     List<Segment> segments = getSegments(dataSource, manifest, /* allowIncompleteList= */ false);
     CachingCounters cachingCounters = new CachingCounters();
     totalSegments = segments.size();
@@ -215,6 +216,11 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
       Segment segment = segments.get(i);
       CacheUtil.getCached(segment.dataSpec, cache, cachingCounters);
       downloadedBytes += cachingCounters.alreadyCachedBytes;
+      if("CustomScheme://priv.example.com/key.php?r=52".equals(segment.dataSpec.uri.toString())){
+        Log.e("wzh", "自己服务器KEY不下载");
+        downloadedSegments ++;
+        segments.remove(i);
+      }
       if (cachingCounters.alreadyCachedBytes == cachingCounters.contentLength) {
         // The segment is fully downloaded.
         downloadedSegments++;

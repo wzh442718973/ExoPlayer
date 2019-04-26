@@ -121,7 +121,7 @@ public final class HlsDownloader extends SegmentDownloader<HlsPlaylist> {
   private static HlsPlaylist loadManifest(DataSource dataSource, Uri uri) throws IOException {
     return ParsingLoadable.load(dataSource, new HlsPlaylistParser(), uri, C.DATA_TYPE_MANIFEST);
   }
-
+  //添加细分的数据
   private static void addSegment(
       ArrayList<Segment> segments,
       HlsMediaPlaylist mediaPlaylist,
@@ -129,10 +129,10 @@ public final class HlsDownloader extends SegmentDownloader<HlsPlaylist> {
       HashSet<Uri> seenEncryptionKeyUris) {
     long startTimeUs = mediaPlaylist.startTimeUs + hlsSegment.relativeStartTimeUs;
     if (hlsSegment.fullSegmentEncryptionKeyUri != null) {//wzh 下载器中对于解密KEY的处理
-//      Log.e("wzh", "下载用的解密key: " + hlsSegment.fullSegmentEncryptionKeyUri);
       Uri keyUri = UriUtil.resolveToUri(mediaPlaylist.baseUri,
           hlsSegment.fullSegmentEncryptionKeyUri);
       if (seenEncryptionKeyUris.add(keyUri)) {
+        Log.e("wzh", "下载用的解密key: " + mediaPlaylist.baseUri + " >> " + hlsSegment.fullSegmentEncryptionKeyUri);
         segments.add(new Segment(startTimeUs, new DataSpec(keyUri)));
       }
     }

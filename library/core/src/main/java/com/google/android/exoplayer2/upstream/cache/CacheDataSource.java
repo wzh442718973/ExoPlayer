@@ -29,6 +29,8 @@ import com.google.android.exoplayer2.upstream.TeeDataSource;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.upstream.cache.Cache.CacheException;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.Log;
+
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.lang.annotation.Documented;
@@ -277,10 +279,11 @@ public final class CacheDataSource implements DataSource {
     cacheReadDataSource.addTransferListener(transferListener);
     upstreamDataSource.addTransferListener(transferListener);
   }
-
+//打开数据源
   @Override
   public long open(DataSpec dataSpec) throws IOException {
     try {
+      Log.e("wzh", "CacheDataSource.open: " + dataSpec);
       key = cacheKeyFactory.buildCacheKey(dataSpec);
       uri = dataSpec.uri;
       actualUri = getRedirectedUriOrDefault(cache, key, /* defaultUri= */ uri);
@@ -308,6 +311,7 @@ public final class CacheDataSource implements DataSource {
       openNextSource(false);
       return bytesRemaining;
     } catch (IOException e) {
+      Log.e("wzh", "CacheDataSource.open: ", e);
       handleBeforeThrow(e);
       throw e;
     }

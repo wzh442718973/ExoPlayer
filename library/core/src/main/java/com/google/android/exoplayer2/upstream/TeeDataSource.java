@@ -50,7 +50,7 @@ public final class TeeDataSource implements DataSource {
 
   @Override
   public long open(DataSpec dataSpec) throws IOException {
-    bytesRemaining = upstream.open(dataSpec);
+    bytesRemaining = upstream.open(dataSpec);//打开网络流
     if (bytesRemaining == 0) {
       return 0;
     }
@@ -59,7 +59,7 @@ public final class TeeDataSource implements DataSource {
       dataSpec = dataSpec.subrange(0, bytesRemaining);
     }
     dataSinkNeedsClosing = true;
-    dataSink.open(dataSpec);
+    dataSink.open(dataSpec);//打开文件流
     return bytesRemaining;
   }
 

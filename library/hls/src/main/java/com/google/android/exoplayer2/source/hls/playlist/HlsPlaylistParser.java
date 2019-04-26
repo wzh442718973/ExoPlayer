@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 
 import org.checkerframework.checker.nullness.qual.PolyNull;
 
-/**
+/** wzh log HLS播放列表解析逻辑
  * HLS playlists parsing logic.
  */
 public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlaylist> {
